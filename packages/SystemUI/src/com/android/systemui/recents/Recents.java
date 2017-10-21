@@ -223,6 +223,10 @@ public class Recents extends SystemUI
         return sDebugFlags;
     }
 
+    public void evictAllCaches() {
+        getTaskLoader().evictAllCaches();
+    }
+
     @Override
     public void start() {
         final Resources res = mContext.getResources();
@@ -255,7 +259,6 @@ public class Recents extends SystemUI
         if (sSystemServicesProxy.isSystemUser(processUser)) {
             // For the system user, initialize an instance of the interface that we can pass to the
             // secondary user
-            getComponent(CommandQueue.class).addCallbacks(this);
             mSystemToUserCallbacks = new RecentsSystemUser(mContext, mImpl);
         } else {
             // For the secondary user, bind to the primary user's service to get a persistent
@@ -935,5 +938,17 @@ public class Recents extends SystemUI
                     Settings.System.RECENTS_ICON_PACK, /* defaultIconPack */ "");
             // Quickstep settings observer will now refresh the icon pack
         }
+    }
+
+    public void removeSbCallbacks() {
+        getComponent(CommandQueue.class).removeCallbacks(this);
+        // there are other callbacks registered (like with RecentsImplProxy binder for non sys users)
+        // to be removed but for now let's use the easiest way and just block main calls in RecentsImpl
+        mImpl.mUseSlimRecents = true;
+    }
+
+    public void addSbCallbacks() {
+        getComponent(CommandQueue.class).addCallbacks(this);
+        mImpl.mUseSlimRecents = false;
     }
 }
