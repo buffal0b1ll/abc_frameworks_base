@@ -4421,6 +4421,13 @@ public final class Settings {
          */
         public static final String ALWAYS_ON_DISPLAY_CONSTANTS_CUST = "always_on_display_constants_cust";
 
+        /**
+         * Volume key controls ringtone or media sound stream
+         * @hide
+         */
+        public static final String VOLUME_KEYS_CONTROL_RING_TONE =
+                "volume_keys_control_ring_tone";
+
         /** End of ABC system settings**/
 
         /**
